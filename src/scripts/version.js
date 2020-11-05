@@ -1,28 +1,35 @@
+;(() => {
+  'use strict'
 
-// Get Version
-// ––––––––––––––––––––––––––––––––––––––––––––––––––
+  const $description = document.querySelector('.description')
+  const $download = document.querySelector('.download')
+  if (!$description || !$download) return
 
-(() => {
+  const request = new window.XMLHttpRequest()
 
-	'use strict';
+  request.open(
+    'GET',
+    `//raw.githubusercontent.com/milligram/milligram/master/package.json`,
+    true,
+  )
+  request.onload = onload
+  request.send()
 
-	const $description = document.querySelector('.description');
-	const $download = document.querySelector('.download');
-	const request = new XMLHttpRequest();
-	const repository = 'milligram/milligram';
-	let version;
+  function onload () {
+    if (this.status < 200 && this.status >= 400) {
+      console.error('[error] There was a connection error of some sort')
+      return
+    }
 
-	if (!$description || !$download) return;
-
-	request.open('GET', `//raw.githubusercontent.com/${repository}/master/package.json`, true);
-	request.onload = onload;
-	request.send();
-
-	function onload() {
-		if (this.status < 200 && this.status >= 400) console.error('[error] There was a connection error of some sort');
-		version = JSON.parse(this.response).version;
-		if ($description) $description.innerHTML = `${$description.innerHTML} <br><i><small>Currently v${version}</small></i>`;
-		$download.setAttribute('href', `https://github.com/${repository}/archive/v${version}.zip`);
-	};
-
-})();
+    const version = JSON.parse(this.response).version || ''
+    $description.innerHTML = `${
+      $description.innerHTML
+    } <br><i><small>${$description.getAttribute(
+      'data-version',
+    )} v${version}</small></i>`
+    $download.setAttribute(
+      'href',
+      `https://github.com/milligram/milligram/archive/v${version}.zip`,
+    )
+  }
+})()

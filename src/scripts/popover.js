@@ -1,37 +1,37 @@
+;(() => {
+  'use strict'
 
-// Popover
-// ––––––––––––––––––––––––––––––––––––––––––––––––––
+  const $popoverLinks = document.querySelectorAll('[data-popover]')
+  const $popovers = document.querySelectorAll('.popover')
 
-(() => {
+  for (let index = 0; index < $popoverLinks.length; index++) {
+    $popoverLinks[index].addEventListener('click', openPopover)
+  }
 
-	'use strict';
+  document.addEventListener('click', closePopover)
 
-	const $popoverLinks = document.querySelectorAll('[data-popover]');
-	const $popovers = document.querySelectorAll('.popover');
-	const $anchors = document.querySelectorAll('.navigation a');
-	let i;
-	let href;
+  function closePopover (event) {
+    for (let index = 0; index < $popovers.length; index++) {
+      $popovers[index].classList.remove('popover-open')
+    }
+  }
 
-	for (i = 0; i < $popoverLinks.length; i++) $popoverLinks[i].addEventListener('click', openPopover);
-
-	document.addEventListener('click', closePopover);
-
-	// Close Popover
-	function closePopover(event) {
-		for (i = 0; i < $popovers.length; i++) $popovers[i].classList.remove('popover-open');
-	}
-
-	// Open Popover
-	function openPopover(event) {
-		event.preventDefault();
-		if (document.querySelector(this.getAttribute('href')).classList.contains('popover-open')) {
-			document.querySelector(this.getAttribute('href')).classList.remove('popover-open');
-		}
-		else {
-			closePopover();
-			document.querySelector(this.getAttribute('href')).classList.add('popover-open');
-		}
-		event.stopImmediatePropagation();
-	}
-
-})();
+  function openPopover (event) {
+    event.preventDefault()
+    if (
+      document
+        .querySelector(this.getAttribute('href'))
+        .classList.contains('popover-open')
+    ) {
+      document
+        .querySelector(this.getAttribute('href'))
+        .classList.remove('popover-open')
+    } else {
+      closePopover()
+      document
+        .querySelector(this.getAttribute('href'))
+        .classList.add('popover-open')
+    }
+    event.stopImmediatePropagation()
+  }
+})()

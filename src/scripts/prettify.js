@@ -1,29 +1,35 @@
+;(() => {
+  'use strict'
 
-// Prettify
-// ––––––––––––––––––––––––––––––––––––––––––––––––––
+  const entityMapObject = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+    '/': '&#x2F;',
+  }
 
-(() => {
+  const $codeSnippets = document.querySelectorAll('.code-content')
 
-	'use strict';
+  for (let index = 0; index < $codeSnippets.length; index++) {
+    if ($codeSnippets[index].parentNode.classList.contains('lang-html'))
+      $codeSnippets[index].innerHTML = changeCommet(
+        $codeSnippets[index].innerHTML,
+      )
+    $codeSnippets[index].innerHTML = escapeHTML($codeSnippets[index].innerHTML)
+  }
 
-	const $codeSnippets = document.querySelectorAll('.code-content');
-	const entityMapObject = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '/': '&#x2F;' };
-	let i;
+  function escapeHTML (string) {
+    return String(string).replace(
+      /[&<>"']/g,
+      caracter => entityMapObject[caracter],
+    )
+  }
 
-	for (i = 0; i < $codeSnippets.length; i++) $codeSnippets[i].innerHTML = escapeHtml($codeSnippets[i].innerHTML);
-
-	function escapeHtml(string) {
-		return String(string).replace(/[&<>"'\/]/g, (index) => {
-			return entityMapObject[index];
-		});
-	}
-
-	((l, o, a, d, e, r) => {
-		e = o.createElement(a);
-		e.async = 1;
-		e.src = d;
-		r = o.getElementsByTagName(a)[document.querySelectorAll(a).length - 1];
-		r.parentNode.insertBefore(e, r);
-	})(window, document, 'script', 'bower_components/code-prettify/src/run_prettify.js');
-
-})();
+  function changeCommet (string) {
+    return String(string)
+      .replace(/\/\*/g, '<!--')
+      .replace(/\*\//g, '-->')
+  }
+})()
